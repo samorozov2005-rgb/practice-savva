@@ -1,0 +1,8 @@
+.gradle
+build
+.idea
+.git
+backups
+.deploy
+.finalization-runtime
+*.log

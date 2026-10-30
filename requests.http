@@ -1,0 +1,34 @@
+@base = http://localhost:8080
+
+### Категории
+GET {{base}}/api/categories
+
+### Создание (замените dueAt будущей датой)
+POST {{base}}/api/tickets
+Content-Type: application/json
+
+{"title":"Не работает VPN","description":"Ошибка подключения","categoryId":4,"priority":"HIGH","dueAt":"2030-01-01T12:00:00Z"}
+
+### Получение
+GET {{base}}/api/tickets/1
+
+### Редактирование
+PATCH {{base}}/api/tickets/1
+Content-Type: application/json
+
+{"description":"Проверены настройки","priority":"MEDIUM"}
+
+### Статус
+PATCH {{base}}/api/tickets/1/status
+Content-Type: application/json
+
+{"status":"IN_PROGRESS"}
+
+### Фильтры
+GET {{base}}/api/tickets?status=IN_PROGRESS&priority=MEDIUM&title=vpn&page=0&size=20&sort=createdAt,desc
+
+### История
+GET {{base}}/api/tickets/1/history
+
+### Отчёт [from,to)
+GET {{base}}/api/reports/summary?from=2026-01-01T00:00:00Z&to=2031-01-01T00:00:00Z

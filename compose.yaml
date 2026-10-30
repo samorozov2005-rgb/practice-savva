@@ -1,0 +1,44 @@
+name: ${COMPOSE_PROJECT_NAME:-practice-savva}
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-support}
+      POSTGRES_USER: ${POSTGRES_USER:-support}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-support_dev_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  app:
+    image: ${APP_IMAGE:-support-ticket-service:local}
+    build:
+      context: .
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-support}
+      DB_USER: ${POSTGRES_USER:-support}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-support_dev_password}
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 6
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
