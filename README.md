@@ -112,3 +112,6 @@ Rollback заменяет только application image. Он не откаты
 - interrupted deploy: `current-image` остаётся последней подтверждённой версией, а `pending-image` показывает незавершённую попытку; повторите deploy рабочей версии.
 
 Полный тест-план, эксплуатация, отчёт и материалы защиты находятся в `docs/`.
+
+## Deployment test
+Second automatic deployment via GitHub Actions.
